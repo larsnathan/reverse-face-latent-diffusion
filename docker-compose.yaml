@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  diffusers_retrain:
+    build: .
+    container_name: diffusers_retrain
+    environment:
+      - PYTHONUNBUFFERED=1
+      - CUDA_VISIBLE_DEVICES=1  # Or another GPU if necessary
+    volumes:
+      - .:/app  # Mount the current directory to /app inside the container
+    shm_size: '3gb'
+    ipc: host
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 4
+              capabilities: [gpu]
+    command: ["python", "diffusers_retrain.py"]  # Command to run the script
+    restart: always  # Automatically restart container if it crashes
